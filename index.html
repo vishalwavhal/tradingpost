@@ -1,0 +1,191 @@
+<html>
+
+
+  <head>
+    <style>
+      body {
+  font-family: fangsong, sans-serif;
+  background: rgb(78, 173, 228);
+  padding: 15px;
+}
+
+#content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #2d7ec0;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+h1, 
+h2 {
+  text-align: center;
+}
+
+form {
+  width: 45%;
+  float: left;
+  padding: 20px;
+}
+
+#outputs {
+  width: 45%;
+  float: right;
+  padding: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="number"] {
+  width: 30%;
+  padding: 5px;
+  border: 1px solid #000000;
+  border-radius: 1px;
+}
+
+button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 15px;
+  background: #007bff;
+  color: #fff;
+  border: 2px solid #000000;
+  border-radius: 2px;
+}
+
+#outputs p {
+  text-align: center;
+}
+
+#outputs span {
+  font-weight: bold; 
+}
+    </style>
+  </head>
+<head>
+  <title>Tradingpost.in</title>
+</head>  
+<body>
+  <a href="daily2.html">daily Trend Strategy</a>
+  
+
+  <form>
+    <label for="capital">Capital:</label><br> 
+    <input type="number" id="capital" name="capital"><br>
+
+    <label for="entry">Entry:</label><br>
+    <input type="number" id="entry" name="entry"><br>  
+
+    <label for="delta">Delta:</label><br>
+    <input type="number" id="delta" name="delta" value="0.5"><br>
+
+    <label for="RPT">RPT:</label><br>  
+    <input type="number" id="RPT" name="RPT" value="10000"><br>
+
+    <label for="risk">Risk:</label><br>
+    <input type="number" id="risk" name="risk" value="2"><br>
+
+    <label for="reward">Reward:</label><br>
+    <input type="number" id="reward" name="reward" value="1"><br>
+
+  </form>
+
+  <button onclick="calculate()">Calculate</button>
+
+  <p>Stoploss: <span id="stoploss"></span></p>
+
+  <p>Target: <span id="target"></span></p>
+
+  <p>Ideal Quantity: <span id="idealQuantity"></span></p>
+
+  <p>Risk to Reward Ratio: <span id="riskToReward"></span></p>
+
+  <p>Maximum Profit: <span id="maxProfit"></span></p>
+
+  <p>Maximum Loss: <span id="maxLoss"></span></p>
+
+  <p>Required Premium: <span id="requiredPremium"></span></p>
+
+  <p>Maximum Percentage Profit: <span id="maxPercentProfit"></span></p>
+
+  <p>Maximum Percentage Loss: <span id="maxPercentLoss"></span></p>
+
+  <script>
+
+    function calculate() {
+
+      // Get input values  
+      let capital = document.getElementById("capital").value;
+      let entry = document.getElementById("entry").value;
+      let delta = document.getElementById("delta").value;
+      let RPT = document.getElementById("RPT").value;
+      let risk = document.getElementById("risk").value;
+      let reward = document.getElementById("reward").value;
+      
+      // Parse string values to numbers
+      capital = parseFloat(capital);
+      entry = parseFloat(entry);
+      delta = parseFloat(delta);
+      RPT = parseFloat(RPT);
+      risk = parseFloat(risk);
+      reward = parseFloat(reward);
+
+      // Calculate outputs
+      let stoploss = entry - (entry * risk * delta);
+      let target = entry + (entry * reward * delta);
+      
+      let idealQuantity;
+      if (entry > stoploss) {
+        idealQuantity = RPT / (entry - stoploss);
+      } else {
+        idealQuantity = RPT / (stoploss - entry);
+      }
+      
+      let riskToReward;
+      if (entry > stoploss) {
+        riskToReward = (target - entry) / (entry - stoploss);
+      } else {
+        riskToReward = (entry - target) / (stoploss - entry); 
+      }
+      
+      let maxProfit;
+      if (entry > stoploss) {
+        maxProfit = idealQuantity * (target - entry);
+      } else {
+        maxProfit = idealQuantity * (entry - target);
+      }
+
+      let maxLoss;
+      if (entry > stoploss) {
+        maxLoss = idealQuantity * (entry - stoploss);
+      } else {
+        maxLoss = idealQuantity * (stoploss - entry);
+      }
+
+      let requiredPremium = entry * idealQuantity; 
+
+      let maxPercentProfit = (maxProfit / requiredPremium) * 100;
+
+      let maxPercentLoss = (maxLoss / requiredPremium) * 100;
+
+      // Update output spans 
+      document.getElementById("stoploss").textContent = stoploss.toFixed(2);
+      document.getElementById("target").textContent = target.toFixed(2);
+      document.getElementById("idealQuantity").textContent = idealQuantity.toFixed(2);
+      document.getElementById("riskToReward").textContent = riskToReward.toFixed(2);
+      document.getElementById("maxProfit").textContent = maxProfit.toFixed(2);
+      document.getElementById("maxLoss").textContent = maxLoss.toFixed(2);
+      document.getElementById("requiredPremium").textContent = requiredPremium.toFixed(2);
+      document.getElementById("maxPercentProfit").textContent = maxPercentProfit.toFixed(2);
+      document.getElementById("maxPercentLoss").textContent = maxPercentLoss.toFixed(2);
+
+    }
+
+  </script>
+
+</body>
+
+</html>

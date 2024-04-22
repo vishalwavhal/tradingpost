@@ -1,0 +1,106 @@
+<html>
+<body>
+
+<h2>Calculator</h2>
+
+<form>
+  Previous Day High: <input type="number" id="high"><br>
+  Previous Day Low: <input type="number" id="low"><br>
+
+
+  <br><br>
+  CALL: <output id="call"></output>
+  High: <input type="number" id="newHighCall">
+  Low: <input type="number" id="newLowCall">
+
+  <br>
+  PUT: <output id="put"></output>
+  High: <input type="number" id="newHighPut">
+  Low: <input type="number" id="newLowPut">
+  
+</form>
+<button onclick="calculateCallPut()">Calculate CALL & PUT</button>
+
+<div id="call"></div>
+<div id="put"></div>
+
+<button onclick="calculateTable()">Calculate Table</button>
+
+<table id="resultTable">
+  <tr>
+    <th>TRADE</th>
+    <th>ENTRY</th>
+    <th>STOPLOSS</th>
+    <th>TARGET-1</th> 
+  </tr>
+  <tr id="callRow"></tr>
+  <tr id="putRow"></tr>
+</table>
+
+<script>
+// Calculate CALL and PUT 
+function calculateCallPut() {
+
+let high = document.getElementById("high").value;
+let low = document.getElementById("low").value;
+
+let call = Math.round(high/100)*100 - 100;
+let put = Math.round(low/100)*100 + 100;
+
+document.getElementById("call").innerHTML = call;
+document.getElementById("put").innerHTML = put;
+
+}
+
+// Calculate table rows
+function calculateTable() {
+
+  // Get call High and call Low inputs
+  let CE_high = document.getElementById("newHighCall").value;
+  let CE_low = document.getElementById("newLowCall").value;
+
+  // Get Put High and Put Low inputs
+  let PE_high = document.getElementById("newHighPut").value;
+  let PE_low = document.getElementById("newLowPut").value;
+
+  // Get CALL and PUT
+  let call = document.getElementById("call").innerHTML;
+  let put = document.getElementById("put").innerHTML;
+
+  // Calculate CALL row
+  let callEntry = mround(CE_high*1.1, 0.05);
+  let callStopLoss = mround(Math.max(callEntry*0.65, CE_low), 0.05);
+  let callTarget = mround(callEntry*1.5, 0.05);
+  
+  // Calculate PUT row
+  let putEntry = mround(PE_high*1.1, 0.05);
+  let putStopLoss = mround(Math.max(putEntry*0.65, PE_low), 0.05);
+  let putTarget = mround(putEntry*1.5, 0.05);
+
+  // Display CALL row
+  let callRow = "";
+  callRow += "<td>" + call + "</td>"; 
+  callRow += "<td>" + callEntry + "</td>";
+  callRow += "<td>" + callStopLoss + "</td>";
+  callRow += "<td>" + callTarget + "</td>";
+
+  // Display PUT row
+  let putRow = "";
+  putRow += "<td>" + put + "</td>";
+  putRow += "<td>" + putEntry + "</td>";
+  putRow += "<td>" + putStopLoss + "</td>";
+  putRow += "<td>" + putTarget + "</td>";
+
+  document.getElementById("callRow").innerHTML = callRow;
+  document.getElementById("putRow").innerHTML = putRow;
+
+}
+
+function mround(value, step) {
+  return Math.round(value/step)*step;
+}
+
+</script>
+
+</body>
+</html>

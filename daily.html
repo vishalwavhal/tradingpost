@@ -1,0 +1,98 @@
+<html>
+
+<head>
+  <title>Options Calculator</title> 
+</head>
+
+<body>
+
+  <h1>Options Calculator</h1>
+  
+  <label for="high">High:</label>
+  <input type="number" id="high">
+
+  <label for="low">Low:</label>
+  <input type="number" id="low">
+
+  <button onclick="calculateCallPut()">Calculate CALL & PUT</button>
+
+  <div id="call"></div>
+  <div id="put"></div>
+
+  <button onclick="calculateTable()">Calculate Table</button>
+
+  <table id="resultTable">
+    <tr>
+      <th>TRADE</th>
+      <th>ENTRY</th>
+      <th>STOPLOSS</th>
+      <th>TARGET-1</th> 
+    </tr>
+    <tr id="callRow"></tr>
+    <tr id="putRow"></tr>
+  </table>
+
+<script>
+
+// Calculate CALL and PUT 
+function calculateCallPut() {
+
+  let high = document.getElementById("high").value;
+  let low = document.getElementById("low").value;
+
+  let call = Math.round(high/100)*100 - 100;
+  let put = Math.round(low/100)*100 + 100;
+
+  document.getElementById("call").innerHTML = call;
+  document.getElementById("put").innerHTML = put;
+
+}
+
+// Calculate table rows
+function calculateTable() {
+
+  // Get High and Low inputs
+  let high = document.getElementById("high").value;
+  let low = document.getElementById("low").value;
+
+  // Get CALL and PUT
+  let call = document.getElementById("call").innerHTML;
+  let put = document.getElementById("put").innerHTML;
+
+  // Calculate CALL row
+  let callEntry = mround(high*1.1, 0.05);
+  let callStopLoss = mround(Math.max(callEntry*0.65, low), 0.05);
+  let callTarget = mround(callEntry*1.5, 0.05);
+  
+  // Calculate PUT row
+  let putEntry = mround(low*1.1, 0.05);
+  let putStopLoss = mround(Math.max(putEntry*0.65, low), 0.05);
+  let putTarget = mround(putEntry*1.5, 0.05);
+
+  // Display CALL row
+  let callRow = "";
+  callRow += "<td>" + call + "</td>"; 
+  callRow += "<td>" + callEntry + "</td>";
+  callRow += "<td>" + callStopLoss + "</td>";
+  callRow += "<td>" + callTarget + "</td>";
+
+  // Display PUT row
+  let putRow = "";
+  putRow += "<td>" + put + "</td>";
+  putRow += "<td>" + putEntry + "</td>";
+  putRow += "<td>" + putStopLoss + "</td>";
+  putRow += "<td>" + putTarget + "</td>";
+
+  document.getElementById("callRow").innerHTML = callRow;
+  document.getElementById("putRow").innerHTML = putRow;
+
+}
+
+function mround(value, step) {
+  return Math.round(value/step)*step;
+}
+
+</script>
+
+</body>
+</html>
